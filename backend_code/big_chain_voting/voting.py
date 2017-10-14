@@ -1,7 +1,7 @@
 from bigchaindb_driver import BigchainDB
 from bigchaindb_driver.crypto import generate_keypair
 
-def _vote_token(question, voter_public_key):
+def _vote_token(question, org, voter_public_key):
     """
     Funcion de ayuda que crea un token para un votante dado
     """
@@ -26,8 +26,8 @@ def give_tokens(bdb, org, to_public_key, question):
     prepared_token_tx = bdb.transactions.prepare(
         operation='CREATE',
         signers=org.public_key,
-        recipients=[([u1.public_key],3)],
-        asset=_vote_token(question, to_public_key),
+        recipients=[([to_public_key],3)],
+        asset=_vote_token(question, org, to_public_key),
     )
     fulfilled_token_tx = bdb.transactions.fulfill(
         prepared_token_tx,
@@ -73,12 +73,12 @@ def vote(bdb, voter, org_public_key, question_id, val):
         operation='TRANSFER',
         asset=transfer_asset,
         inputs=transfer_input,
-        recipients=[([org.public_key], 1+val), ([u1.public_key],2-val)]
+        recipients=[([org_public_key], 1+val), ([voter.public_key],2-val)]
     )
 
     fulfilled_transfer_fx = bdb.transactions.fulfill(
         prepared_transfer_tx,
-        private_keys=u1.private_key
+        private_keys=voter.private_key
     )
 
     sent_transfer_tx = bdb.transactions.send(fulfilled_transfer_fx)
