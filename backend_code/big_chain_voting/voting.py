@@ -2,6 +2,9 @@ from bigchaindb_driver import BigchainDB
 from bigchaindb_driver.crypto import generate_keypair
 
 def _vote_token(question, voter_public_key):
+    """
+    Funcion de ayuda que crea un token para un votante dado
+    """
     return {
         'data': {
             'token_for': {
@@ -14,7 +17,12 @@ def _vote_token(question, voter_public_key):
         }
     }
 
-def give_tokens(bdb, fr, to_public_key, question):
+def give_tokens(bdb, org, to_public_key, question):
+    """
+    Primera funcion en la creacion de una encuesta,
+    permite al organizador (org) dar tokens a un votante
+    conocido por su key.
+    """
     prepared_token_tx = bdb.transactions.prepare(
         operation='CREATE',
         signers=org.public_key,
@@ -30,6 +38,9 @@ def give_tokens(bdb, fr, to_public_key, question):
     return send_token_tx
 
 def vote(bdb, voter, org_public_key, question_id, val):
+    """
+    Permite a un votante responder a una votacion creada por un organizador
+    """
     # primero encontramos el asset
     assets = bdb.assets.get(search=question_id)
     asset = next(x for x in assets
@@ -74,6 +85,9 @@ def vote(bdb, voter, org_public_key, question_id, val):
     return sent_transfer_tx
 
 def count_votes(bdb, org, question_id, census):
+    """
+    Permite realizar el recuento de votos en un momento dado.
+    """
     c = set(census)
     assets = bdb.assets.get(search=question_id)
     # filtrdao de assets
@@ -86,7 +100,7 @@ def count_votes(bdb, org, question_id, census):
 
         # filtramos los resultados incorrectos
         lst = [x for x in lst
-                if len(x['outputs']) > 1 and x['outputs'][1]['public_keys'][0] in census]
+                if len(x['outputs']) > 1 and x['outputs'][1]['public_keys'][0] in c]
 
         txs += lst
     #return txs

@@ -1,4 +1,6 @@
 import base64
+import qrcode
+import uuid
 
 def to_url(q):
     base64_q = base64.b64encode(bytes(q['question'], 'utf-8')).decode('utf-8')
@@ -11,3 +13,12 @@ def from_url(url):
         'date': d,
         'orgid': id_,
     }
+
+def url_to_qr(text, filename=None):
+    if not filename:
+        filename = uuid.uuid4().hex + '.png'
+    img = qrcode.make(text)
+    img.save(filename)
+    return filename
+
+
