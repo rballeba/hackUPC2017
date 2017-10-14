@@ -3,13 +3,13 @@ import qrcode
 import uuid
 
 def to_url(q):
-    base64_q = base64.b64encode(bytes(q['question'], 'utf-8')).decode('utf-8')
+    base64_q = base64.urlsafe_b64encode(q['question'])
     return '-'.join([q['orgid'], base64_q, str(q['date'])])
 
 def from_url(url):
     id_, q, d = url.split('-')
     return {
-        'question': base64.b64decode(bytes(q, 'utf-8')).decode('utf-8'),
+        'question': base64.urlsafe_b64encode(q),
         'date': d,
         'orgid': id_,
     }
