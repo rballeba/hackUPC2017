@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<form action="{{ url_for('vote', question_id=question_id) }}" method=POST>
+    <div>
+        <label for="public_key">ID</label>
+        <input type="text" name="public_key">
+    </div>
+
+    <div>
+        <label for="private_key">KEY</label>
+        <input type="password" name="private_key">
+    </div>
+
+    <div>
+        <input type="radio" name="vote" value="yes">YES<br>
+        <input type="radio" name="vote" value="no">NO<br>
+    </div>
+
+    <button type="submit" value=Share>SUBMIT</button>
+</form>
+{% endblock %}
