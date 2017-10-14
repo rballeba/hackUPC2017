@@ -20,16 +20,13 @@ def vote(question_id):
     if request.method == 'GET':
         return render_template('vote.html', question_id=question_id)
     # votar la pregunta 'question_id'
-    print(1)
     form = request.form
-    print(2)
 
     print('id {}\npw {}\nvote {}\nquestion id {}'.format(
         form['public_key'],
         form['private_key'], 
         form['vote'],
         question_id))
-    print(3)
 
     # buscar voto que cumple form['vote']
     # crear transaccion a question
